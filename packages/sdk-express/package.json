@@ -1,0 +1,24 @@
+{
+  "name": "@monitor/sdk-express",
+  "version": "0.1.0",
+  "description": "Discord 기반 서버 운영 Observability 플랫폼용 Express SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@monitor/shared": "workspace:*",
+    "check-disk-space": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.16.11",
+    "express": "^4.21.0",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "express": "^4.18.0 || ^5.0.0"
+  }
+}

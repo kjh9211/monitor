@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServerStatus {
+  ONLINE
+  OFFLINE
+  UNKNOWN
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  name           String
+  ownerDiscordId String
+  discordGuildId String
+  createdAt      DateTime @default(now())
+
+  servers Server[]
+}
+
+/// SDK가 붙는 실제 애플리케이션/서버 한 대에 대응한다.
+/// writeToken 하나가 Server 하나에 1:1로 매핑된다 (monitor({ token })).
+model Server {
+  id               String       @id @default(cuid())
+  projectId        String
+  project          Project      @relation(fields: [projectId], references: [id])
+  name             String
+  writeToken       String       @unique
+  discordChannelId String
+  statusMessageId  String?
+  status           ServerStatus @default(UNKNOWN)
+  lastSeenAt       DateTime?
+  createdAt        DateTime     @default(now())
+
+  alertRules AlertRule[]
+  incidents  Incident[]
+
+  @@unique([projectId, name])
+}
+
+model AlertRule {
+  id          String   @id @default(cuid())
+  serverId    String
+  server      Server   @relation(fields: [serverId], references: [id])
+  /// "cpu" | "memory" | "disk" | "httpLatency" | "errorRate"
+  metric      String
+  /// "gt" | "lt"
+  operator    String
+  threshold   Float
+  durationSec Int      @default(0)
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Incident {
+  id        String    @id @default(cuid())
+  serverId  String
+  server    Server    @relation(fields: [serverId], references: [id])
+  /// alertRule의 metric 값 또는 "offline"
+  metric    String
+  cause     String
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+}
