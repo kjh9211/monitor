@@ -70,7 +70,7 @@ export const serverCommand: Command = {
         `\`\`\`\n${writeToken}\n\`\`\``,
         ``,
         "```js",
-        'const monitor = require("@monitor/sdk-express");',
+        'const monitor = require("@kjh9211/sdk-express");',
         `app.use(monitor({ token: "${writeToken}" }));`,
         "```",
       ].join("\n"),
