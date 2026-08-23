@@ -16,7 +16,7 @@ packages/shared        SDK <-> 서버가 공유하는 ingest 타입
 docs/                   기획서, API 계약 문서
 ```
 
-Express용 Node.js SDK(`@monitor/sdk-express`)는 [kjh9211/monitorSDK](https://github.com/kjh9211/monitorSDK)
+Express용 Node.js SDK(`@kjh9211/sdk-express`)는 [kjh9211/monitorSDK](https://github.com/kjh9211/monitorSDK)
 레포로 분리되었다. SDK ↔ Core API 계약은 [`docs/api-contract.md`](./docs/api-contract.md)를 통해 동기화한다.
 
 ## 로컬 실행
@@ -63,11 +63,11 @@ Discord에서 `/project create name:<이름>` → `/server register name:<이름
 ### 6. 앱에 SDK 연동
 
 ```bash
-npm install @monitor/sdk-express
+npm install @kjh9211/sdk-express
 ```
 
 ```js
-const monitor = require("@monitor/sdk-express").monitor;
+const monitor = require("@kjh9211/sdk-express").monitor;
 app.use(monitor({ token: "srv_xxx", apiUrl: "http://localhost:3000" }));
 ```
 
