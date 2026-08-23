@@ -1,5 +1,7 @@
 # Discord 기반 서버 운영 Observability 플랫폼
 
+[![CI](https://github.com/kjh9211/monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/kjh9211/monitor/actions/workflows/ci.yml)
+
 > 📄 **[SDK ↔ Monitoring API 계약](./docs/api-contract.md)** — 새 언어 SDK를 만들거나 ingest 응답을 다룰 때 먼저 읽을 문서
 > 📄 [기획서](./docs/기획서.md) — 제품 정의, 기능 범위, 로드맵
 
@@ -69,12 +71,16 @@ app.use(monitor({ token: "srv_xxx", apiUrl: "http://localhost:3000" }));
 
 자세한 SDK 옵션은 [`packages/sdk-express/README.md`](./packages/sdk-express/README.md) 참고.
 
-## 빌드 / 타입체크
+## 빌드 / 타입체크 / 테스트
 
 ```bash
 pnpm build
 pnpm typecheck
+pnpm test
 ```
+
+`pnpm test`는 `apps/server`의 API 통합 테스트(`apps/server/tests`)를 실행한다. 실제 Postgres/Redis가 필요하므로
+(4)번 단계까지 먼저 진행한 뒤 실행한다. CI(`.github/workflows/ci.yml`)에서도 동일한 순서로 매 PR마다 실행된다.
 
 ## 현재 구현 범위 (MVP)
 
