@@ -11,11 +11,13 @@ Discord를 개발자의 서버 운영 콘솔로 만든다. SDK를 앱에 한두 
 ## 구조
 
 ```text
-apps/server          Monitoring API + Discord Bot (Node.js/TypeScript, 단일 프로세스)
-packages/sdk-express  @monitor/sdk-express — Express용 Node.js SDK
+apps/server           Monitoring API + Discord Bot (Node.js/TypeScript, 단일 프로세스)
 packages/shared        SDK <-> 서버가 공유하는 ingest 타입
 docs/                   기획서, API 계약 문서
 ```
+
+Express용 Node.js SDK(`@monitor/sdk-express`)는 [kjh9211/monitorSDK](https://github.com/kjh9211/monitorSDK)
+레포로 분리되었다. SDK ↔ Core API 계약은 [`docs/api-contract.md`](./docs/api-contract.md)를 통해 동기화한다.
 
 ## 로컬 실행
 
@@ -69,7 +71,7 @@ const monitor = require("@monitor/sdk-express").monitor;
 app.use(monitor({ token: "srv_xxx", apiUrl: "http://localhost:3000" }));
 ```
 
-자세한 SDK 옵션은 [`packages/sdk-express/README.md`](./packages/sdk-express/README.md) 참고.
+자세한 SDK 옵션은 [kjh9211/monitorSDK의 README](https://github.com/kjh9211/monitorSDK/blob/main/README.md) 참고.
 
 ## 빌드 / 타입체크 / 테스트
 

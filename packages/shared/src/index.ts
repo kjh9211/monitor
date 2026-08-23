@@ -1,6 +1,8 @@
 /**
  * SDK <-> Monitoring API 사이의 ingest 데이터 계약.
- * 이 파일을 수정하면 apps/server와 packages/sdk-express 양쪽에 영향을 준다.
+ * 이 파일을 수정하면 apps/server에 영향을 준다. Express SDK는 kjh9211/monitorSDK로
+ * 분리되어 이 타입들을 src/contract.ts에 인라인해서 쓰므로, 계약을 바꿀 때는
+ * 그쪽 레포도 사람이 직접 동기화해야 한다 (docs/api-contract.md 참고).
  */
 
 export interface SystemMetrics {
