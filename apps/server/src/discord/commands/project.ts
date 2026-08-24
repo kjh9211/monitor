@@ -1,21 +1,32 @@
 import { SlashCommandBuilder } from "discord.js";
 import { prisma } from "../../db/prisma";
+import { enLocalization, messages, resolveLocale } from "../../i18n";
 import type { Command } from "./types";
 
 export const projectCommand: Command = {
   data: new SlashCommandBuilder()
     .setName("project")
     .setDescription("모니터링 프로젝트를 관리합니다")
+    .setDescriptionLocalizations(enLocalization("Manage monitoring projects"))
     .addSubcommand((sub) =>
       sub
         .setName("create")
         .setDescription("새 프로젝트를 생성합니다")
-        .addStringOption((opt) => opt.setName("name").setDescription("프로젝트 이름").setRequired(true))
+        .setDescriptionLocalizations(enLocalization("Create a new project"))
+        .addStringOption((opt) =>
+          opt
+            .setName("name")
+            .setDescription("프로젝트 이름")
+            .setDescriptionLocalizations(enLocalization("Project name"))
+            .setRequired(true)
+        )
     ) as SlashCommandBuilder,
 
   async execute(interaction) {
+    const locale = resolveLocale(interaction.locale);
+
     if (!interaction.inGuild() || !interaction.guildId) {
-      await interaction.reply({ content: "이 명령어는 서버(길드) 안에서만 사용할 수 있습니다.", ephemeral: true });
+      await interaction.reply({ content: messages[locale].guildOnly(), ephemeral: true });
       return;
     }
 
@@ -33,12 +44,7 @@ export const projectCommand: Command = {
     });
 
     await interaction.reply({
-      content: [
-        `✅ 프로젝트가 생성되었습니다.`,
-        ``,
-        `**Project ID**: \`${project.id}\``,
-        `이제 이 채널에서 \`/server register\` 명령으로 서버를 등록하세요.`,
-      ].join("\n"),
+      content: messages[locale].projectCreated(project.id),
       ephemeral: true,
     });
   },

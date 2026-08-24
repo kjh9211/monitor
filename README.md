@@ -60,6 +60,10 @@ pnpm dev
 Discord에서 `/project create name:<이름>` → `/server register name:<이름> project:<Project ID>` 순으로
 실행하면 해당 채널에 상태 임베드가 생성되고, 응답으로 SDK용 write token이 발급된다.
 
+주기 갱신(기본 tick)을 기다리지 않고 최신 상태를 바로 보고 싶으면 `/server status`를 쓴다. 명령어 응답은
+호출한 사용자의 Discord 클라이언트 언어(현재 한국어/영어 지원, `apps/server/src/i18n`)를 따르고, 채널에
+게시되는 상태 임베드·장애 알림은 서버(길드)의 Discord 언어 설정을 따른다.
+
 ### 6. 앱에 SDK 연동
 
 ```bash
@@ -86,7 +90,8 @@ pnpm test
 
 ## 현재 구현 범위 (MVP)
 
-- [x] Discord OAuth2 봇 설치, `/project create`, `/server register`
+- [x] Discord OAuth2 봇 설치, `/project create`, `/server register`, `/server status`(즉시 확인)
+- [x] Discord 응답/임베드 i18n 기반 마련 (한국어/영어)
 - [x] Node.js(Express) SDK: CPU/RAM/Disk/Uptime, HTTP latency/error rate, 에러 캡처
 - [x] Discord 임베드 실시간 업데이트 (기존 메시지 수정 방식)
 - [x] 임계값 + 지속시간 기반 알림, 장애 발생/복구 알림

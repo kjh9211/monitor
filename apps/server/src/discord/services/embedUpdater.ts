@@ -1,6 +1,7 @@
 import type { IngestBatch } from "@monitor/shared";
 import { client } from "../client";
 import { buildStatusEmbed } from "../embeds/statusEmbed";
+import { resolveLocale } from "../../i18n";
 
 export async function updateStatusEmbed(
   server: { name: string; status: string; discordChannelId: string; statusMessageId: string | null },
@@ -14,5 +15,6 @@ export async function updateStatusEmbed(
   const message = await channel.messages.fetch(server.statusMessageId).catch(() => null);
   if (!message) return;
 
-  await message.edit({ embeds: [buildStatusEmbed(server, snapshot)] });
+  const guildLocale = "guild" in channel ? channel.guild?.preferredLocale : undefined;
+  await message.edit({ embeds: [buildStatusEmbed(server, snapshot, resolveLocale(guildLocale))] });
 }

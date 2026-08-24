@@ -1,5 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import type { IngestBatch } from "@monitor/shared";
+import { DEFAULT_LOCALE, messages, type AppLocale } from "../../i18n";
 
 function bar(percent: number): string {
   const clamped = Math.min(Math.max(percent, 0), 100);
@@ -21,14 +22,16 @@ function statusColor(status: string): number {
 
 export function buildStatusEmbed(
   server: { name: string; status: string },
-  snapshot: IngestBatch | null
+  snapshot: IngestBatch | null,
+  locale: AppLocale = DEFAULT_LOCALE
 ): EmbedBuilder {
+  const m = messages[locale];
   const embed = new EmbedBuilder()
     .setTitle(`${statusIcon(server.status)} ${server.name}`)
     .setColor(statusColor(server.status));
 
   if (!snapshot) {
-    embed.setDescription("데이터 수신 대기 중...");
+    embed.setDescription(m.embedWaiting());
     return embed;
   }
 
@@ -38,15 +41,16 @@ export function buildStatusEmbed(
     `Memory   ${bar(system.memoryPercent)}  ${system.memoryPercent.toFixed(0)}%`,
     `Disk     ${bar(system.diskPercent)}  ${system.diskPercent.toFixed(0)}%`,
   ];
-  embed.addFields({ name: "System", value: "```\n" + systemLines.join("\n") + "\n```" });
+  embed.addFields({ name: m.embedSystemField(), value: "```\n" + systemLines.join("\n") + "\n```" });
 
   if (http) {
     embed.addFields({
-      name: "HTTP",
-      value: `avg ${http.avgLatencyMs.toFixed(0)}ms · ${http.requestCount} req · error ${(http.errorRate * 100).toFixed(1)}%`,
+      name: m.embedHttpField(),
+      value: m.embedHttpValue(http.avgLatencyMs, http.requestCount, http.errorRate * 100),
     });
   }
 
-  embed.setFooter({ text: `Last update: ${new Date(snapshot.timestamp).toLocaleTimeString()}` });
+  const timeStr = new Date(snapshot.timestamp).toLocaleTimeString(locale === "ko" ? "ko-KR" : "en-US");
+  embed.setFooter({ text: m.embedLastUpdate(timeStr) });
   return embed;
 }
