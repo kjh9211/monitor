@@ -77,6 +77,21 @@ app.use(monitor({ token: "srv_xxx", apiUrl: "http://localhost:3000" }));
 
 자세한 SDK 옵션은 [kjh9211/monitorSDK의 README](https://github.com/kjh9211/monitorSDK/blob/main/README.md) 참고.
 
+## 운영 배포 (자동 업데이트)
+
+로컬 개발(`pnpm dev`) 대신, 빌드된 서버를 실제로 띄울 때는 [`@kjh9211/autoupdate`](https://www.npmjs.com/package/@kjh9211/autoupdate)로
+감싼 진입점을 쓸 수 있다. `main`에 새 커밋이 올라오면 주기적으로 `pull`하고, 다음 정각/30분에 서버를 재시작하며,
+크래시 시에도 스스로 재시작한다 — PM2 같은 별도 프로세스 매니저가 필요 없다.
+
+```bash
+pnpm build
+pnpm --filter @monitor/server start:autoupdate
+```
+
+내부적으로 `apps/server/src/run.ts`가 저장소 루트를 `cwd`로, `pnpm --filter @monitor/server start`(=`dist/index.js`
+직접 실행)를 `startScript`로 감시한다. 자동 업데이트 없이 그냥 직접 띄우고 싶으면 기존처럼
+`pnpm --filter @monitor/server start`를 쓰면 된다.
+
 ## 빌드 / 타입체크 / 테스트
 
 ```bash
